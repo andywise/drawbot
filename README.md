@@ -1,6 +1,6 @@
 ![](drawbot.gif)
 
-# Drawbot
+# Drawbot ✏️🤖
 
 Drawing robot capable of rendering SVG paths over WebSockets. Powered by a Raspberry Pi running Node.js.
 
@@ -49,7 +49,7 @@ On the Drawbot Pi:
 3. `npm i`
 
 ## Use
-On the Drawbbot Pi:
+On the Drawbot Pi:
 
 * Run `npm start` or `sudo node draw.js` to start the Drawbot controller.
 
