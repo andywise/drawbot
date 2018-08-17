@@ -1,0 +1,24 @@
+{
+  "name": "drawbot",
+  "version": "1.0.0",
+  "description": "a drawing robot",
+  "main": "draw.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "sudo node draw.js"
+  },
+  "keywords": [
+    "drawbot"
+  ],
+  "author": "Andy Wise",
+  "license": "ISC",
+  "dependencies": {
+    "adaptive-bezier-curve": "^1.0.3",
+    "adaptive-quadratic-curve": "^1.0.2",
+    "express": "^4.15.3",
+    "jsonfile": "^4.0.0",
+    "socket.io": "^2.0.2",
+    "socket.io-client": "^2.0.3",
+    "svg-path-parser": "^1.0.1"
+  }
+}

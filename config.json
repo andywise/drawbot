@@ -1,0 +1,24 @@
+{
+    "botID": "drawbot",
+    "swapDirections": false,
+    "localPort": 80,
+    "baseDelay": 2,
+    "d": 1000,
+    "startPos": {
+      "x": 100,
+      "y": 100
+    },
+    "stepsPerMM": [
+      10,
+      10
+    ],
+    "penPauseDelay": 400,
+    "remoteURL": "",
+    "pins": {
+      "leftDir": 20,
+      "rightDir": 6,
+      "leftStep": 21,
+      "rightStep": 13,
+      "penServo": 18
+    }
+}
