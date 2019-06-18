@@ -42,9 +42,9 @@ Drawing robot capable of rendering SVG paths over WebSockets. Powered by a Raspb
 
 ![](wiring/drawbot_wiring.jpg)
 
-## Hardware Assembly (Coming Soon!)
+## Hardware Assembly
 
-* ...
+Thank you to the kind people at the Johnson County Library's Black & Veatch [MakerSpace](https://www.jocolibrary.org/makerspace) for documenting the assembly process at [instructables.com](https://www.instructables.com/id/Drawbot/).
 
 ## Raspberry Pi Zero W Basic Setup
 1. **Download and install [Etcher](https://etcher.io/)**.
