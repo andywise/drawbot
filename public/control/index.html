@@ -328,7 +328,8 @@
         function handleTouch(e){
             e.preventDefault()
             var data = this.dataset
-            data.d = 1
+	    //TODO: make data.d populate based on config.json and settings changes
+            data.d = 2
             // data.botID = botID
             socket.emit('r', data)
         }
