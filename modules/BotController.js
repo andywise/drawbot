@@ -12,7 +12,7 @@ var BotController = (cfg) => {
 
     /////////////////////////////////
     // MAIN SETUP VARIABLES
-    bc._BOT_ID      = config.botID            // || 'two'
+    bc._BOT_ID      = config.botID            // || 'drawbot'
     bc._DIRSWAP     = config.swapDirections   // || [true, true]
     bc.baseDelay    = config.baseDelay        // || 2
     bc._D           = config.d                // || 1000// default distance between string starts
