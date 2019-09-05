@@ -13,7 +13,7 @@ var BotController = (cfg) => {
     /////////////////////////////////
     // MAIN SETUP VARIABLES
     bc._BOT_ID      = config.botID            // || 'two'
-    bc._DIRSWAP     = config.swapDirections   // || true
+    bc._DIRSWAP     = config.swapDirections   // || [true, true]
     bc.baseDelay    = config.baseDelay        // || 2
     bc._D           = config.d                // || 1000// default distance between string starts
     bc.startPos     = config.startPos         // || { x: 100, y: 100 }
@@ -118,7 +118,7 @@ var BotController = (cfg) => {
 
     bc.makeStep = (m, d) => {
         // console.log('step',d)
-        if(bc._DIRSWAP) d = !d// swap direction if that setting is on
+        if(bc._DIRSWAP[m]) d = !d// swap direction if that setting is on
         dirPins[m].digitalWrite(d)
         stepPins[m].digitalWrite(1)
         setTimeout(function(){
