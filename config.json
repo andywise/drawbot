@@ -1,6 +1,9 @@
 {
     "botID": "drawbot",
-    "swapDirections": false,
+    "swapDirections": [
+        true,
+        true
+    ],
     "localPort": 80,
     "baseDelay": 2,
     "d": 1000,
