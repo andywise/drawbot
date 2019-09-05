@@ -1,27 +1,39 @@
 {
-    "botID": "drawbot",
-    "swapDirections": [
-        true,
-        true
-    ],
-    "localPort": 80,
-    "baseDelay": 2,
-    "d": 1000,
-    "startPos": {
-      "x": 100,
-      "y": 100
+  "botID": "drawbot",
+  "swapDirections": [
+    true,
+    true
+  ],
+  "localPort": 80,
+  "baseDelay": 2,
+  "d": 1000,
+  "startPos": {
+    "x": 100,
+    "y": 100
+  },
+  "stepsPerMM": [
+    10,
+    10
+  ],
+  "penPauseDelay": 400,
+  "remoteURL": "",
+  "pins": {
+    "leftDir": 20,
+    "rightDir": 6,
+    "leftStep": 21,
+    "rightStep": 13,
+    "penServo": 18
+  },
+  "stepResolutionPins": {
+    "leftMotor": {
+      "ms1": 2,
+      "ms2": 3,
+      "ms3": 4
     },
-    "stepsPerMM": [
-      10,
-      10
-    ],
-    "penPauseDelay": 400,
-    "remoteURL": "",
-    "pins": {
-      "leftDir": 20,
-      "rightDir": 6,
-      "leftStep": 21,
-      "rightStep": 13,
-      "penServo": 18
+    "rightMotor": {
+      "ms1": 17,
+      "ms2": 27,
+      "ms3": 22,
     }
+  }
 }

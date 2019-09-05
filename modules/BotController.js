@@ -35,6 +35,29 @@ var BotController = (cfg) => {
     // set up servo GPIO pin
     var servo = new Gpio(config.pins.penServo, gmOut)
 
+    // ^ Step resolution Pins
+    const leftMotorMs1= new Gpio(config.stepResolutionPins.leftMotor.ms1, gmOut)
+    const leftMotorMs2= new Gpio(config.stepResolutionPins.leftMotor.ms2, gmOut)
+    const leftMotorMs3= new Gpio(config.stepResolutionPins.leftMotor.ms3, gmOut)
+    const rightMotorMs1= new Gpio(config.stepResolutionPins.rightMotor.ms1, gmOut)
+    const rightMotorMs2= new Gpio(config.stepResolutionPins.rightMotor.ms2, gmOut)
+    const rightMotorMs3= new Gpio(config.stepResolutionPins.rightMotor.ms3, gmOut)
+
+    // ^ Step resolution settings
+    // * Were configuring our driver for an Eighth Step resolution. Also note that these pinouts
+    // * correspond to the A4988 StepStick stepper motor driver:
+    // ? https://www.pololu.com/product/1182
+    // 
+    // * We're not adjusting the values on the fly so they can be set here and not touched, but if your resolution
+    // * needs to vary at runtime you can adjust the values of these pins. More information 
+    // * on pin configurations can be found here:
+    // ? https://howtomechatronics.com/tutorials/arduino/how-to-control-stepper-motor-with-a4988-driver-and-arduino/
+    leftMotorMs1.digitalWrite(1)
+    leftMotorMs2.digitalWrite(1)
+    leftMotorMs3.digitalWrite(0)
+    rightMotorMs1.digitalWrite(1)
+    rightMotorMs2.digitalWrite(1)
+    rightMotorMs3.digitalWrite(0)
 
     /////////////////////////////////
     // CONTROLLER VARIABLES
