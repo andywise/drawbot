@@ -484,27 +484,31 @@
 		    return false;
 		}
         dropTarget.ondrop = function(e) {
-            this.className = '';
-		    e.preventDefault();
+			this.className = '';
+			e.preventDefault();
+		
+			console.log('dropped!');
+			var file = e.dataTransfer.files[0],
+			reader = new FileReader();
 
-            console.log('dropped!');
-		    var file = e.dataTransfer.files[0],
-		        reader = new FileReader();
-
-				reader.onload = function(evt) {
-		        svg = ParseXML(evt.target.result);
-						// holder.innerHTML = evt.target.result;
-                var path = svg.getElementsByTagName('path')[0];
-
-                var data = {
-                    path: path.getAttribute('d'),
-                    // botID: botID
-                }
-                socket.emit('drawart',data);
-		    }
-		    reader.readAsText(file);
-
-		    return false;
+			reader.onload = function(evt) {
+				svg = ParseXML(evt.target.result);
+				// holder.innerHTML = evt.target.result;
+				var paths = svg.getElementsByTagName('path');
+				let concatPath = "";
+				for(let i=0; i < paths.length; i++)
+				{
+					var path = paths[i];
+					concatPath += path.getAttribute('d');
+				}
+				var data = {
+					path: concatPath,
+					// botID: botID
+				}
+				socket.emit('drawart',data);
+			}
+			reader.readAsText(file);
+			return false;
 		}
 </script>
 </body>
