@@ -24,48 +24,49 @@ var LocalServer = (cfg, controller) => {
         console.log('connection!')
         socket.emit('connected', { hello: 'world' })
 
-        socket.on('pen',function(data){
+        socket.on('pen', function (data) {
+            console.log('Pen tool activated')
             c.pen(data.up)
         })
-        socket.on('r',function(data){
+        socket.on('r', function (data) {
             c.rotate(Number(data.m), Number(data.dir), Number(data.d), Number(data.steps))
         })
-        socket.on('drawpath',function(data){
+        socket.on('drawpath', function (data) {
             c.addPath(data.path)
         })
-        socket.on('drawart',function(data){
+        socket.on('drawart', function (data) {
             c.paths = []
             c.drawingPath = false
             c.addPath(data.path)
         })
-        socket.on('setStartPos',function(data){
+        socket.on('setStartPos', function (data) {
             c.setStartPos(data)
         })
-        socket.on('setD',function(data){
+        socket.on('setD', function (data) {
             c.setD(Number(data.d))
         })
-        socket.on('moveto',function(data){
-            c.moveTo(data.x,data.y)
+        socket.on('moveto', function (data) {
+            c.moveTo(data.x, data.y)
         })
-        socket.on('getDXY', function(data){
-            socket.emit('DXY',{
-              d: c._D,
-              x: c.startPos.x,
-              y: c.startPos.y,
-              strings: c.startStringLengths
-          })
+        socket.on('getDXY', function (data) {
+            socket.emit('DXY', {
+                d: c._D,
+                x: c.startPos.x,
+                y: c.startPos.y,
+                strings: c.startStringLengths
+            })
         })
-        socket.on('pause', function(data){
+        socket.on('pause', function (data) {
             pause()
         })
-        socket.on('reboot', function(data){
+        socket.on('reboot', function (data) {
             exec('sudo reboot')
         })
     })
 
     ls.start = () => {
-        server.listen(config.localPort, function(){
-            console.log('listening on port '+config.localPort+'...')
+        server.listen(config.localPort, function () {
+            console.log('listening on port ' + config.localPort + '...')
         })
     }
 
