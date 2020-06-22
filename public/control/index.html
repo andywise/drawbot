@@ -2,510 +2,553 @@
 
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta id="viewport" name="viewport" content ="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      id="viewport"
+      name="viewport"
+      content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
     <title>Drawbot Control</title>
-    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet">
+    <link
+      href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css"
+      rel="stylesheet"
+    />
     <script src="/socket.io/socket.io.js"></script>
     <script src="js/radialIndicator.min.js"></script>
     <style>
-        body,*{
-            border:0;
-            margin:0;
-            padding:0;
-            box-sizing:border-box;
-            font-family: sans-serif;
-        }
+      body,
+      * {
+        border: 0;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: sans-serif;
+      }
 
-        #control{
-            margin:12vh 0 0 0;
-            position:relative;
-        }
+      #control {
+        margin: 12vh 0 0 0;
+        position: relative;
+      }
 
-        .level{
-            position:absolute;
-            border-radius:100%;
-            overflow:hidden;
-        }
-        
-        .one{
-            width:100vw;
-            height:100vw;
-        }
-        .one .item{
-            background:gray;
-            width:50vw;
-            height:50vw;
-        }
+      .level {
+        position: absolute;
+        border-radius: 100%;
+        overflow: hidden;
+      }
 
-        .two{
-            width:75vw;
-            height:75vw;
-            top:12.5vw;
-            left:12.5vw;
-            
-            overflow:hidden;
-        }
-        .two .item{
-            background:darkgray;
-            width:37.5vw;
-            height:37.5vw;
-        }
+      .one {
+        width: 100vw;
+        height: 100vw;
+      }
+      .one .item {
+        background: gray;
+        width: 50vw;
+        height: 50vw;
+      }
 
-        .three{
-            width:50vw;
-            height:50vw;
-            top:25vw;
-            left:25vw;
-            
-            overflow:hidden;
-        }
-        .three .item{
-            background:lightgray;
-            width:25vw;
-            height:25vw;
-        }
+      .two {
+        width: 75vw;
+        height: 75vw;
+        top: 12.5vw;
+        left: 12.5vw;
 
-        .circle{
-            border-radius:100%;
-            overflow:hidden;
-            display:flex;
-            flex-wrap:wrap;
-            
-        }
-        .item{
-            display:block;
-            border:1.5vw solid white;
-            padding:2vw 0 0 2vw;
-            color:white;
-            font-weight: bold;
-        }
-        .item:active{
-            background:black;
-        }
-        .tl{ border-radius:100% 0 0 0; }
-        .tr{ border-radius:0 100% 0 0; }
-        .bl{ border-radius:0 0 0 100%; }
-        .br{ border-radius:0 0 100% 0; }
+        overflow: hidden;
+      }
+      .two .item {
+        background: darkgray;
+        width: 37.5vw;
+        height: 37.5vw;
+      }
 
-        /* separate circle buttons */
-        .btn{
-            display:block;
-            position:absolute;
-            border-radius:100%;
-            border:5px solid gray;
-            width:25vw;
-            height:25vw;
-            text-align: center;
-            line-height:25vw;
-            text-decoration:none;
-            color:gray;
-            background:white;
-            font-size:6vw;
-            font-weight:bold;
-        }
-        .btn:active{
-            background:black;
-            color:white;
-        }
-        .btn i{
-             line-height:23vw; 
-        }
-        .close{
-            border-color:white;
-            top:2vw;
-            right:2vw;
-        }
-        .clearcanvas{
-            top:115vw;
-            left:2vw;
-            border-color:white;
-        }
+      .three {
+        width: 50vw;
+        height: 50vw;
+        top: 25vw;
+        left: 25vw;
 
-        .pen{
-            top:37.5vw;
-            left:37.5vw;
-            border-color:white;
-        }
-        .home{
-            top:2vw;
-            left:2vw;
-            border-color:white;
-        }
-        .settings{
-            top:2vw;
-            right:2vw;
-            border-color:white;
-        }
+        overflow: hidden;
+      }
+      .three .item {
+        background: lightgray;
+        width: 25vw;
+        height: 25vw;
+      }
 
-        .pause{
-            margin:2vw 0 0 0;
-            left:17vw;
-        }
-        .reboot{
-            margin:2vw 0 0 0;
-            right:17vw;
-        }
+      .circle {
+        border-radius: 100%;
+        overflow: hidden;
+        display: flex;
+        flex-wrap: wrap;
+      }
+      .item {
+        display: block;
+        border: 1.5vw solid white;
+        padding: 2vw 0 0 2vw;
+        color: white;
+        font-weight: bold;
+      }
+      .item:active {
+        background: black;
+      }
+      .tl {
+        border-radius: 100% 0 0 0;
+      }
+      .tr {
+        border-radius: 0 100% 0 0;
+      }
+      .bl {
+        border-radius: 0 0 0 100%;
+      }
+      .br {
+        border-radius: 0 0 100% 0;
+      }
 
-        .dragover{
-            opacity:0.5;
-        }
-        #home{
-            visibility:hidden;
-        }
-        #settings{
-            visibility: hidden;
-        }
-        .on{
-            visibility: visible !important;
-        }
+      /* separate circle buttons */
+      .btn {
+        display: block;
+        position: absolute;
+        border-radius: 100%;
+        border: 5px solid gray;
+        width: 25vw;
+        height: 25vw;
+        text-align: center;
+        line-height: 25vw;
+        text-decoration: none;
+        color: gray;
+        background: white;
+        font-size: 6vw;
+        font-weight: bold;
+      }
+      .btn:active {
+        background: black;
+        color: white;
+      }
+      .btn i {
+        line-height: 23vw;
+      }
+      .close {
+        border-color: white;
+        top: 2vw;
+        right: 2vw;
+      }
+      .clearcanvas {
+        top: 115vw;
+        left: 2vw;
+        border-color: white;
+      }
 
-        #dxy{
-            font-size:6vw;
-            font-weight:bold;
-            width:66vw;
-            margin:0 10.5vw;
-            padding-top:10vw;
-            color:gray;
-        }
-        input{
-            font-size:16vw;
-            font-weight:bold;
-            width:46vw;
-            padding:2vh 3vw;
-            text-align:center;
-            border-radius:10vw;
-            color:gray;
-        }
-        input:focus{
-            background:black;
-            color:white;
-        }
-        input:focus ~ label{
-            color:black;
-        }
-        label{
-            position:relative;
-            bottom:3vw;
-        }
-        label i{
-            width:8vw;
-            padding:2vw;
-            text-align: center;
-        }
-        *:focus{
-            outline:none;
-        }
-        #botid{
-            text-align: center;
-            position:absolute;
-            top:2vw;
-            left:0;
-            width:100vw;
-            font-size:10px;
-            font-weight: normal;
-            color:gray;
-        }
-        #connection{
-            color:lightgray;
-            display:block;
-            position:absolute;
-            width:25vw;
-            left:37.5vw;
-            top:12vw;
-            text-align: center;
-        }
-        .disconnected{
-            color:red !important;
-        }
-        .rebooting{
-            color:orange !important;
-        }
-        .connected{
-            color:green !important;
-        }
-        #percentage{
-            display:flex;
-            align-items: center;
-            justify-content: center;
-            position:absolute;
-            width:25vw;
-            height:25vw;
-            top:115vw;
-            right:2vw;
-        }
+      .pen {
+        top: 37.5vw;
+        left: 37.5vw;
+        border-color: white;
+      }
+      .home {
+        top: 2vw;
+        left: 2vw;
+        border-color: white;
+      }
+      .settings {
+        top: 2vw;
+        right: 2vw;
+        border-color: white;
+      }
+
+      .pause {
+        margin: 2vw 0 0 0;
+        left: 17vw;
+      }
+      .reboot {
+        margin: 2vw 0 0 0;
+        right: 17vw;
+      }
+
+      .dragover {
+        opacity: 0.5;
+      }
+      #home {
+        visibility: hidden;
+      }
+      #settings {
+        visibility: hidden;
+      }
+      .on {
+        visibility: visible !important;
+      }
+
+      #dxy {
+        font-size: 6vw;
+        font-weight: bold;
+        width: 66vw;
+        margin: 0 10.5vw;
+        padding-top: 10vw;
+        color: gray;
+      }
+      input {
+        font-size: 16vw;
+        font-weight: bold;
+        width: 46vw;
+        padding: 2vh 3vw;
+        text-align: center;
+        border-radius: 10vw;
+        color: gray;
+      }
+      input:focus {
+        background: black;
+        color: white;
+      }
+      input:focus ~ label {
+        color: black;
+      }
+      label {
+        position: relative;
+        bottom: 3vw;
+      }
+      label i {
+        width: 8vw;
+        padding: 2vw;
+        text-align: center;
+      }
+      *:focus {
+        outline: none;
+      }
+      #botid {
+        text-align: center;
+        position: absolute;
+        top: 2vw;
+        left: 0;
+        width: 100vw;
+        font-size: 10px;
+        font-weight: normal;
+        color: gray;
+      }
+      #connection {
+        color: lightgray;
+        display: block;
+        position: absolute;
+        width: 25vw;
+        left: 37.5vw;
+        top: 12vw;
+        text-align: center;
+      }
+      .disconnected {
+        color: red !important;
+      }
+      .rebooting {
+        color: orange !important;
+      }
+      .connected {
+        color: green !important;
+      }
+      #percentage {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: absolute;
+        width: 25vw;
+        height: 25vw;
+        top: 115vw;
+        right: 2vw;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div id="main">
-        <!-- <h1 id="botid">one</h1> -->
-        <div id="connection" class="fa fa-circle"></div>
-        <div class="page on" id="home">
-            <a href="#" class="btn home"><i class="fa  fa-home fa-2x"></i></a>
-            <a href="#" class="btn settings"><i class="fa  fa-gear fa-2x"></i></a>
-            <a href="#" class="btn clearcanvas"><i class="fa  fa-minus-circle fa-2x"></i></a>
-            <div id="percentage" class=""></div>
-            <div id="control">
-                <div class="level one">
-                    <div class="circle">
-                        <a data-m="0" data-dir="1" data-steps="1000" class="item tl"></a>
-                        <a data-m="1" data-dir="0" data-steps="1000" class="item tr"></a>
-                        <a data-m="1" data-dir="1" data-steps="1000" class="item bl">1000</a>
-                        <a data-m="0" data-dir="0" data-steps="1000" class="item br"></a>
-                    </div>
-                </div>
-                <div class="level two">
-                    <div class="circle">
-                        <a data-m="0" data-dir="1" data-steps="100" class="item tl"></a>
-                        <a data-m="1" data-dir="0" data-steps="100" class="item tr"></a>
-                        <a data-m="1" data-dir="1" data-steps="100" class="item bl">100</a>
-                        <a data-m="0" data-dir="0" data-steps="100" class="item br"></a>
-                    </div>
-                </div>
-                <div class="level three">
-                    <div class="circle">
-                        <a data-m="0" data-dir="1" data-steps="10" class="item tl"></a>
-                        <a data-m="1" data-dir="0" data-steps="10" class="item tr"></a>
-                        <a data-m="1" data-dir="1" data-steps="10" class="item bl">10</a>
-                        <a data-m="0" data-dir="0" data-steps="10" class="item br"></a>
-                    </div>
-                </div>
-                <a href="#" class="btn pen">PEN</a>
+      <!-- <h1 id="botid">one</h1> -->
+      <div id="connection" class="fa fa-circle"></div>
+      <div class="page on" id="home">
+        <a href="#" class="btn home"><i class="fa fa-home fa-2x"></i></a>
+        <a href="#" class="btn settings"><i class="fa fa-gear fa-2x"></i></a>
+        <a href="#" class="btn clearcanvas"
+          ><i class="fa fa-minus-circle fa-2x"></i
+        ></a>
+        <div id="percentage" class=""></div>
+        <div id="control">
+          <div class="level one">
+            <div class="circle">
+              <a data-m="0" data-dir="1" data-steps="1000" class="item tl"></a>
+              <a data-m="1" data-dir="0" data-steps="1000" class="item tr"></a>
+              <a data-m="1" data-dir="1" data-steps="1000" class="item bl"
+                >1000</a
+              >
+              <a data-m="0" data-dir="0" data-steps="1000" class="item br"></a>
             </div>
+          </div>
+          <div class="level two">
+            <div class="circle">
+              <a data-m="0" data-dir="1" data-steps="100" class="item tl"></a>
+              <a data-m="1" data-dir="0" data-steps="100" class="item tr"></a>
+              <a data-m="1" data-dir="1" data-steps="100" class="item bl"
+                >100</a
+              >
+              <a data-m="0" data-dir="0" data-steps="100" class="item br"></a>
+            </div>
+          </div>
+          <div class="level three">
+            <div class="circle">
+              <a data-m="0" data-dir="1" data-steps="10" class="item tl"></a>
+              <a data-m="1" data-dir="0" data-steps="10" class="item tr"></a>
+              <a data-m="1" data-dir="1" data-steps="10" class="item bl">10</a>
+              <a data-m="0" data-dir="0" data-steps="10" class="item br"></a>
+            </div>
+          </div>
+          <a href="#" class="btn pen">PEN</a>
         </div>
-        <div class="page" id="settings">
-            <a href="#" class="btn close"><i class="fa fa-close fa-2x"></i></a>
-            <form id="dxy">
-                <div>
-                    <label for="d"><i class="fa fa-arrows-h"></i> D:</label>
-                    <input type="number" value="0" min="0" inputmode="numeric" pattern="[0-9]*" id="d" name="d">
-                </div>
-                <div>
-                    <label for="startx"><i class="fa fa-long-arrow-right"></i> X:</label>
-                    <input type="number" value="0" min="0" inputmode="numeric" pattern="[0-9]*" id="startx" name="startx">
-                </div>
-                <div>
-                    <label for="starty"><i class="fa fa-long-arrow-down"></i> Y:</label>
-                    <input type="number" value="0" min="0" inputmode="numeric" pattern="[0-9]*" id="starty" name="starty">
-                </div>
-            </form>
-            <a href="#" class="btn pause"><i class="fa fa-pause fa-2x"></i></a>
-            <a href="#" class="btn reboot"><i class="fa fa-refresh fa-2x"></i></a>
-        </div>
+      </div>
+      <div class="page" id="settings">
+        <a href="#" class="btn close"><i class="fa fa-close fa-2x"></i></a>
+        <form id="dxy">
+          <div>
+            <label for="d"><i class="fa fa-arrows-h"></i> D:</label>
+            <input
+              type="number"
+              value="0"
+              min="0"
+              inputmode="numeric"
+              pattern="[0-9]*"
+              id="d"
+              name="d"
+            />
+          </div>
+          <div>
+            <label for="startx"
+              ><i class="fa fa-long-arrow-right"></i> X:</label
+            >
+            <input
+              type="number"
+              value="0"
+              min="0"
+              inputmode="numeric"
+              pattern="[0-9]*"
+              id="startx"
+              name="startx"
+            />
+          </div>
+          <div>
+            <label for="starty"><i class="fa fa-long-arrow-down"></i> Y:</label>
+            <input
+              type="number"
+              value="0"
+              min="0"
+              inputmode="numeric"
+              pattern="[0-9]*"
+              id="starty"
+              name="starty"
+            />
+          </div>
+        </form>
+        <a href="#" class="btn pause"><i class="fa fa-pause fa-2x"></i></a>
+        <a href="#" class="btn reboot"><i class="fa fa-refresh fa-2x"></i></a>
+      </div>
     </div>
-    
-
-    
-
 
     <script>
-        // var botID = location.hash.substr(1) || 'two'
-        // document.title = 'drawbot: ' + botID
-        // let botIDel = document.querySelector('#botid')
-        // botIDel.innerHTML = botID
-        // console.log('botID:',botID)
+      // var botID = location.hash.substr(1) || 'two'
+      // document.title = 'drawbot: ' + botID
+      // let botIDel = document.querySelector('#botid')
+      // botIDel.innerHTML = botID
+      // console.log('botID:',botID)
 
-        var connectionIndicator = document.querySelector('#connection')
+      var connectionIndicator = document.querySelector("#connection")
 
-        
-        var socket = io.connect('/');
-        socket.on('connected', function (data) {
-            console.log('connected!');
-            socket.emit('getDXY');
-            socket.emit('checkBotConnection', {socketID: socket.id});
-        });
+      var socket = io.connect("/")
+      socket.on("connected", function (data) {
+        console.log("connected!")
+        socket.emit("getDXY")
+        socket.emit("checkBotConnection", { socketID: socket.id })
+      })
 
-        var flipper = document.querySelector('#main');
-        
-        var penz = 0;
-        let pads = document.querySelectorAll('.item');
-        for (var i=0; i<pads.length; i++){
-            let pad = pads[i];
-            pad.addEventListener('touchstart',handleTouch);
+      var flipper = document.querySelector("#main")
+
+      var penz = 0
+      let pads = document.querySelectorAll(".item")
+      for (var i = 0; i < pads.length; i++) {
+        let pad = pads[i]
+        pad.addEventListener("touchstart", handleTouch)
+      }
+
+      function handleTouch(e) {
+        e.preventDefault()
+        var data = this.dataset
+        //TODO: make data.d populate based on config.json and settings changes
+        data.d = 2
+        // data.botID = botID
+        socket.emit("r", data)
+      }
+
+      var pen = document.querySelector(".pen")
+      pen.addEventListener("touchstart", function (e) {
+        penz = !penz // swap pen position
+        var data = {
+          up: penz,
+          // botID: botID
         }
+        socket.emit("pen", data)
+      })
 
-        function handleTouch(e){
-            e.preventDefault()
-            var data = this.dataset
-	    //TODO: make data.d populate based on config.json and settings changes
-            data.d = 2
-            // data.botID = botID
-            socket.emit('r', data)
+      var home = document.querySelector(".home")
+      home.addEventListener("touchstart", function (e) {
+        var data = { x: 0, y: 0 }
+        // data.botID = botID
+        socket.emit("moveto", data)
+      })
+
+      var settingsButton = document.querySelector(".settings")
+      settingsButton.addEventListener("click", function (e) {
+        toggleSettings()
+      })
+
+      var settingsPage = document.querySelector("#settings")
+      var homePage = document.querySelector("#home")
+      function toggleSettings() {
+        settingsPage.classList.toggle("on")
+        homePage.classList.toggle("on")
+      }
+
+      var clearcanvasButton = document.querySelector(".clearcanvas")
+      clearcanvasButton.addEventListener("click", function (e) {
+        socket.emit("clearCanvas")
+      })
+
+      var percentageIndicator = document.querySelector("#percentage")
+      var ri = radialIndicator("#percentage", {
+        barColor: "gray",
+        barWidth: 5,
+        initValue: 0,
+        radius: 35,
+        percentage: true,
+      })
+      socket.on("progressUpdate", function (data) {
+        // if(data.botID == botID){
+        // console.log(data)
+        ri.animate(data.percentage)
+        // }
+      })
+
+      var dfield = document.querySelector('input[name="d"]')
+      var xfield = document.querySelector('input[name="startx"]')
+      var yfield = document.querySelector('input[name="starty"]')
+
+      dfield.onchange = function (e) {
+        if (dfield.value == "") dfield.value = 0
+        var data = {
+          d: Number(dfield.value),
+          // botID: botID
         }
+        socket.emit("setD", data)
+      }
+      function updateStartPos() {
+        var data = {
+          x: Number(xfield.value),
+          y: Number(yfield.value),
+        }
+        // data.botID = botID
+        socket.emit("setStartPos", data)
+      }
+      xfield.onchange = yfield.onchange = updateStartPos
 
-        var pen = document.querySelector('.pen');
-        pen.addEventListener('touchstart',function(e){
-            penz = !penz// swap pen position
+      socket.on("DXY", function (data) {
+        // if(data.botID == botID){
+        console.log("DXY", data)
+        dfield.value = data.d
+        xfield.value = data.x
+        yfield.value = data.y
+        // }else{
+        // console.log('DXY for another bot with ID:', data.botID)
+        // }
+      })
+
+      socket.on("botConnect", function (data) {
+        // if(data.botID == botID){
+        botConnectHandler()
+        // }
+      })
+      socket.on("botDisconnect", function (data) {
+        // if(data.botID == botID){
+        botDisconnectHandler()
+        // }
+      })
+      socket.on("botConnectionStatus", function (connected) {
+        if (connected) {
+          botConnectHandler()
+        } else {
+          botDisconnectHandler()
+        }
+      })
+
+      function botConnectHandler() {
+        rebootButton.classList.remove("fa-spin")
+        connectionIndicator.classList.remove("disconnected")
+        connectionIndicator.classList.remove("rebooting")
+        connectionIndicator.classList.add("connected")
+      }
+      function botDisconnectHandler() {
+        connectionIndicator.classList.remove("rebooting")
+        connectionIndicator.classList.remove("connected")
+        connectionIndicator.classList.add("disconnected")
+      }
+
+      var closeButton = document.querySelector(".close")
+      closeButton.addEventListener("click", function (e) {
+        toggleSettings()
+      })
+      var pauseButton = document.querySelector(".pause")
+      pauseButton.addEventListener("click", function (e) {
+        socket.emit("pause")
+      })
+      var rebootButton = document.querySelector(".reboot")
+      rebootButton.addEventListener("click", function (e) {
+        socket.emit("reboot")
+        connectionIndicator.classList.remove("connected")
+        connectionIndicator.classList.remove("disconnected")
+        connectionIndicator.classList.add("rebooting")
+        rebootButton.classList.add("fa-spin")
+      })
+
+      // drag and drop
+      function ParseXML(val) {
+        if (window.DOMParser) {
+          parser = new DOMParser()
+          xmlDoc = parser.parseFromString(val, "text/xml")
+        }
+        return xmlDoc
+      }
+
+      let dropTarget = document.querySelector("#control")
+      dropTarget.ondragover = function () {
+        this.className = "dragover"
+        return false
+      }
+      dropTarget.ondragend = function () {
+        this.className = ""
+        return false
+      }
+      dropTarget.ondrop = function (e) {
+        this.className = ""
+        e.preventDefault()
+
+        console.log("dropped!")
+        var file = e.dataTransfer.files[0],
+          reader = new FileReader()
+
+        reader.onload = function (evt) {
+          svg = ParseXML(evt.target.result)
+          // holder.innerHTML = evt.target.result;
+
+          var paths = svg.getElementsByTagName("path")
+
+          paths.forEach((path) => {
             var data = {
-                up: penz,
-                // botID: botID
+              path: path.getAttribute("d"),
+              // botID: botID
             }
-            socket.emit('pen',data);
-        });
-
-        var home = document.querySelector('.home');
-        home.addEventListener('touchstart',function(e){
-            var data = {x:0,y:0}
-            // data.botID = botID
-            socket.emit('moveto', data);
-        });
-
-        var settingsButton = document.querySelector('.settings');
-        settingsButton.addEventListener('click',function(e){
-            toggleSettings();
-        });
-
-        var settingsPage = document.querySelector('#settings');
-        var homePage = document.querySelector('#home');
-        function toggleSettings(){
-            settingsPage.classList.toggle('on');
-            homePage.classList.toggle('on');
+            socket.emit("drawart", data)
+          })
         }
+        reader.readAsText(file)
 
-        var clearcanvasButton = document.querySelector('.clearcanvas');
-        clearcanvasButton.addEventListener('click', function(e){
-            socket.emit('clearCanvas')
-        })
-
-        var percentageIndicator = document.querySelector('#percentage')
-        var ri = radialIndicator('#percentage', {
-            barColor: 'gray',
-            barWidth: 5,
-            initValue: 0,
-            radius: 35,
-            percentage: true
-        })
-        socket.on('progressUpdate', function(data){
-            // if(data.botID == botID){
-                // console.log(data)
-                ri.animate(data.percentage)
-            // }
-        });
-
-        var dfield = document.querySelector('input[name="d"]');
-        var xfield = document.querySelector('input[name="startx"]');
-        var yfield = document.querySelector('input[name="starty"]');
-
-        dfield.onchange = function(e){
-            if (dfield.value == "") dfield.value = 0
-            var data = {
-                d: Number(dfield.value),
-                // botID: botID
-            }
-            socket.emit('setD',data)
-        }
-        function updateStartPos(){
-            var data = {
-                x: Number(xfield.value),
-                y: Number(yfield.value)
-            }
-            // data.botID = botID
-            socket.emit('setStartPos',data)
-        }
-        xfield.onchange = yfield.onchange = updateStartPos;
-
-        socket.on('DXY', function(data){
-            // if(data.botID == botID){
-                console.log('DXY',data)
-                dfield.value = data.d
-                xfield.value = data.x
-                yfield.value = data.y
-            // }else{
-                // console.log('DXY for another bot with ID:', data.botID)
-            // }
-        });
-        
-        socket.on('botConnect', function(data){
-            // if(data.botID == botID){
-                botConnectHandler()
-            // }
-        })
-        socket.on('botDisconnect', function(data){
-            // if(data.botID == botID){
-                botDisconnectHandler()
-            // }
-        })
-        socket.on('botConnectionStatus', function(connected){
-            if(connected){
-                botConnectHandler()
-            }else{
-                botDisconnectHandler()
-            }
-        })
-
-        function botConnectHandler (){
-            rebootButton.classList.remove('fa-spin')
-            connectionIndicator.classList.remove('disconnected')
-            connectionIndicator.classList.remove('rebooting')
-            connectionIndicator.classList.add('connected')
-        }
-        function botDisconnectHandler (){
-            connectionIndicator.classList.remove('rebooting')
-            connectionIndicator.classList.remove('connected')
-            connectionIndicator.classList.add('disconnected')
-        }
-
-        var closeButton = document.querySelector('.close');
-        closeButton.addEventListener('click',function(e){
-            toggleSettings();
-        });
-        var pauseButton = document.querySelector('.pause');
-        pauseButton.addEventListener('click',function(e){
-            socket.emit('pause')
-        });
-        var rebootButton = document.querySelector('.reboot');
-        rebootButton.addEventListener('click',function(e){
-            socket.emit('reboot')
-            connectionIndicator.classList.remove('connected')
-            connectionIndicator.classList.remove('disconnected')
-            connectionIndicator.classList.add('rebooting')
-            rebootButton.classList.add('fa-spin')
-        });
-
-
-
-        // drag and drop
-        function ParseXML(val){
-			if (window.DOMParser){
-				parser=new DOMParser();
-				xmlDoc=parser.parseFromString(val,"text/xml");
-			}
-			return xmlDoc ;
-		}
-
-        let dropTarget = document.querySelector('#control');
-        dropTarget.ondragover = function() {
-		    this.className = 'dragover';
-		    return false;
-		}
-		dropTarget.ondragend = function() {
-		    this.className = '';
-		    return false;
-		}
-        dropTarget.ondrop = function(e) {
-            this.className = '';
-		    e.preventDefault();
-
-            console.log('dropped!');
-		    var file = e.dataTransfer.files[0],
-		        reader = new FileReader();
-
-				reader.onload = function(evt) {
-		        svg = ParseXML(evt.target.result);
-						// holder.innerHTML = evt.target.result;
-                var path = svg.getElementsByTagName('path')[0];
-
-                var data = {
-                    path: path.getAttribute('d'),
-                    // botID: botID
-                }
-                socket.emit('drawart',data);
-		    }
-		    reader.readAsText(file);
-
-		    return false;
-		}
-</script>
-</body>
+        return false
+      }
+    </script>
+  </body>
 </html>
