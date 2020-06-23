@@ -1,28 +1,27 @@
-
 // LOCAL SERVER
 // LocalServer.js
 
-var express = require('express')
+var express = require("express")
 var app = express()
-var server = require('http').Server(app)
-var io = require('socket.io')(server)
+var server = require("http").Server(app)
+var io = require("socket.io")(server)
 
 var LocalServer = (cfg, controller) => {
-    var c = controller
-    var config = cfg.data
+  var c = controller
+  var config = cfg.data
 
-    var ls = {
-        express: express,
-        app: app,
-        server: server,
-        io: io
-    }
+  var ls = {
+    express: express,
+    app: app,
+    server: server,
+    io: io,
+  }
 
-    app.use(express.static('public'))
+  app.use(express.static("public"))
 
-    io.on('connection', function (socket) {
-        console.log('connection!')
-        socket.emit('connected', { hello: 'world' })
+  io.on("connection", function (socket) {
+    console.log("connection!")
+    socket.emit("connected", { hello: "world" })
 
         socket.on('pen', function (data) {
             console.log('Pen tool activated')
@@ -63,13 +62,32 @@ var LocalServer = (cfg, controller) => {
             exec('sudo reboot')
         })
     })
-
+    socket.on("moveto", function (data) {
+      c.moveTo(data.x, data.y)
+    })
+    socket.on("getDXY", function (data) {
+      socket.emit("DXY", {
+        d: c._D,
+        x: c.startPos.x,
+        y: c.startPos.y,
+        strings: c.startStringLengths,
+      })
+    })
+    socket.on("pause", function (data) {
+      pause()
+    })
+    socket.on("reboot", function (data) {
+      // TODO: refactor, maybe reload the service?
+      // exec('sudo reboot')
+    })
+  })
     ls.start = () => {
         server.listen(config.localPort, function () {
             console.log('listening on port ' + config.localPort + '...')
         })
     }
 
-    return ls
+
+  return ls
 }
 module.exports = LocalServer
