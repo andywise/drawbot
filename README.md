@@ -140,7 +140,8 @@ If you want to run the process from [pm2](http://pm2.keymetrics.io/) so that it 
 
 ```bash
 # start the process
-sudo pm2 start --name drawbot
+pm2 start npm --name "drawbot" -- start
+
 
 # save the process so that it will exist after a restart
 sudo pm2 save

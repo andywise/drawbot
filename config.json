@@ -6,10 +6,10 @@
   ],
   "localPort": 80,
   "baseDelay": 2,
-  "d": 1000,
+  "d": 675,
   "startPos": {
-    "x": 100,
-    "y": 100
+    "x": 50,
+    "y": 50
   },
   "stepsPerMM": [
     10,
@@ -18,11 +18,12 @@
   "penPauseDelay": 400,
   "remoteURL": "",
   "pins": {
-    "leftDir": 20,
-    "rightDir": 6,
-    "leftStep": 21,
-    "rightStep": 13,
-    "penServo": 18
+    "leftDir": 15,
+    "rightDir": 23,
+    "leftStep": 18,
+    "rightStep": 24,
+    "penServo": 21,
+    "fan": 16
   },
   "stepResolutionPins": {
     "leftMotor": {
