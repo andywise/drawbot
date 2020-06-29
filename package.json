@@ -17,9 +17,9 @@
     "adaptive-quadratic-curve": "^1.0.2",
     "express": "^4.15.3",
     "jsonfile": "^4.0.0",
+    "pigpio": "^2.0.1",
     "socket.io": "^2.0.2",
     "socket.io-client": "^2.0.3",
-    "svg-path-parser": "^1.0.1",
-    "pigpio": "^2.0.0"
+    "svg-path-parser": "^1.0.1"
   }
 }
