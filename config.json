@@ -1,5 +1,6 @@
 {
   "botID": "drawbot",
+  "processName": "drawbot",
   "swapDirections": [
     true,
     true
@@ -8,8 +9,8 @@
   "baseDelay": 2,
   "d": 675,
   "startPos": {
-    "x": 50,
-    "y": 50
+    "x": 0,
+    "y": 0
   },
   "stepsPerMM": [
     10,
