@@ -116,19 +116,26 @@ var BotController = (cfg) => {
         var servoMax = 2400
         var servoD = servoMax-servoMin
         var servoUpPos = servoMin+Math.floor(servoD*0.35)
+        servoUpPos = 2000
         var servoDnPos = servoMin
-        if(dir){
+        if(!dir){
             // lift pen up
             // console.log('up')
+            //servo.servoWrite(2400)
+            console.log("Pen Up")
+            console.log(servoUpPos)
             servo.servoWrite(servoUpPos)
         }else{
             // put pen down
             // console.log('down')
+            console.log("Pen Down")
+            console.log(servoDnPos)
             servo.servoWrite(servoDnPos)
             // servo.digitalWrite(0)
         }
     }
     bc.penThen = (dir, callback) => {
+        console.log("pen then")
         if(dir!=bc.penPos){
             bc.pen(dir)
             if (callback!=undefined){
@@ -137,6 +144,9 @@ var BotController = (cfg) => {
         }else{
             callback()
         }
+    }
+    bc.penStop = () => {
+        servo.servoWrite(0)
     }
 
     bc.makeStep = (m, d) => {
@@ -157,6 +167,9 @@ var BotController = (cfg) => {
         var a2 = 0
         var stepped = 0
 
+        var leftStepCount = 0
+        var rightStepCount = 0
+
         var doStep = function(){
             if(!bc.paused){
                 setTimeout(function(){
@@ -168,12 +181,14 @@ var BotController = (cfg) => {
                         a1 += s1
                         if(a1>=steps){
                             a1 -= steps
+                            leftStepCount++
                             bc.makeStep(0,d1)
                         }
 
                         a2 += s2
                         if(a2>=steps){
                             a2 -= steps
+                            rightStepCount++
                             bc.makeStep(1,d2)
                         }
 
@@ -181,6 +196,8 @@ var BotController = (cfg) => {
 
                     }else{
                         // console.log('bc.rotateBoth done!')
+                        console.log(`Left step count: ${leftStepCount}`)
+                        console.log(`Right step count: ${rightStepCount}`)
                         if (callback!=undefined) callback()
                     }
                 }, bc.baseDelay)
@@ -223,39 +240,82 @@ var BotController = (cfg) => {
     bc.moveTo = (x, y, callback, penDir = 1) => {
         // console.log('---------- bc.moveTo',x,y,' ----------')
 
+        console.log(`Current string lengths: left: ${bc.stringLengths[0]}, right: ${bc.stringLengths[1]}`)
+        console.log(`Current steps: left: ${bc.currentSteps[0]}, right: ${bc.currentSteps[1]}`)
+        console.log(`new coordinates: x: ${x}, y: ${y}`)
+
+
         // convert x,y to l1,l2 (ideal, precise string lengths)
         var X = x + bc.startPos.x
         var Y = y + bc.startPos.y
+
+        console.log(`Adjusted relative to home: X: ${X}, Y: ${Y}`)
+
         var X2 = X * X
         var Y2 = Y * Y
+
+        console.log(`Adjusted relative to home: X2: ${X2}, Y2: ${Y2}`)
+
         var DsubX = bc._D - X
         var DsubX2 = DsubX * DsubX
+
+        console.log(`lengths per anchor distance: DsubX: ${DsubX}, DsubX2: ${DsubX2}, anchorDistance: ${bc._D}`)
+
         L1 = Math.sqrt( X2 + Y2 )
         L2 = Math.sqrt( DsubX2 + Y2 )
+
+        console.log(`string lengths : left: ${L1}, right: ${L2}`)
 
         // console.log('L:',L1,L2)
 
         // convert string lengths to motor steps (float to int)
         var s1 = Math.round(L1 * bc.stepsPerMM[0])
         var s2 = Math.round(L2 * bc.stepsPerMM[1])
+        console.log(`signed motor steps: left: ${s1}, right: ${s2}`)
         // console.log('s:',s1,s2)
         // console.log('bc.currentSteps:',bc.currentSteps[0],bc.currentSteps[1])
 
         // get difference between target steps and current steps (+/- int)
         var sd1 = s1 - bc.currentSteps[0]
         var sd2 = s2 - bc.currentSteps[1]
+        console.log(
+                        `step difference between signed steps and current steps (from home): left: ${sd1}, right: ${sd2}`
+                    
+        )
         // console.log('sd:',sd1,sd2)
 
         // get directions from steps difference
         var sdir1 = (sd1>0) ? 0 : 1
         var sdir2 = (sd2>0) ? 1 : 0
+        console.log(
+                        `motor direction: left motor's direction: ${sdir1}, right motor's direction: ${sdir2}`
+                    
+        )
         // console.log('sdir:',sdir1,sdir2)
 
         // get steps with absolute value of steps difference
         var ssteps1 = Math.abs(sd1)
         var ssteps2 = Math.abs(sd2)
+        console.log(`absolute values of steps: left: ${ssteps1}, right: ${ssteps2}`)
         // console.log('ssteps:',ssteps1,ssteps2)
 
+
+        let motorInstructions = {
+            left: {
+                steps: ssteps1,
+                direction: sdir1,
+            },
+            right: {
+                steps: ssteps2,
+                direction: sdir2,
+            },
+            currentSteps: {
+                left: s1,
+                right: s2
+            }
+        }
+        console.log("Motor instructions:")
+        console.log(motorInstructions)
 
         function doRotation(){
             // do the rotation!
@@ -283,7 +343,7 @@ var BotController = (cfg) => {
 
     bc.lineTo = (x,y,callback) => {
         // pen down, then
-
+        console.log("Pen then from line to")
         bc.penThen(0,function(){
             bc.moveTo(Number(x), Number(y), callback, 0)// 0 makes bc.moveTo happen with pen down instead of up
         })
@@ -292,6 +352,9 @@ var BotController = (cfg) => {
 
     bc.addPath = (pathString) => {
         console.log('bc.addPath')
+        console.log("path string:")
+        console.log(pathString)
+        return
         bc.paths.push(pathString)
         console.log('pathcount: ',bc.paths.length)
         if(bc.paths.length==1 && bc.drawingPath==false){
@@ -308,6 +371,8 @@ var BotController = (cfg) => {
             bc.drawPath(bc.paths.shift())// return/remove first path from array
         }else{
             console.log("Done drawing all the paths. :)")
+            console.log("raising pen")
+            bc.penThen(1, () => bc.penStop()) // raise pen when done
         }
     }
 
