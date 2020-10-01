@@ -5,6 +5,7 @@ var express = require("express")
 var app = express()
 var server = require("http").Server(app)
 var io = require("socket.io")(server)
+var {exec} = require("child_process")
 
 var LocalServer = (cfg, controller) => {
   var c = controller
@@ -83,7 +84,11 @@ var LocalServer = (cfg, controller) => {
     })
     socket.on("reboot", function (data) {
       // TODO: refactor, maybe reload the service?
-      // exec('sudo reboot')
+        const command = `sudo pm2 reload ${config.processName}`
+        console.log(command)
+        exec(command, () => {
+            console.log("pm2 process restarted. This is likely not seen in the log")
+        })
     })
   })
   ls.start = () => {
