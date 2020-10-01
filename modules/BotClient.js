@@ -26,7 +26,9 @@ var BotClient = (cfg, controller) => {
             c.rotate(Number(data.m), Number(data.dir), Number(data.d), Number(data.steps))
         })
         client.on('pen',function(data){
-            c.pen(data.up)
+            c.penThen(data.up,() => {
+                c.penStop()
+            })
         })
         client.on('setStartPos',function(data){
             c.setStartPos(data)
